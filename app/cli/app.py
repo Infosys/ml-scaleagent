@@ -70,13 +70,6 @@ log_level = getattr(logging, log_level_str.upper())
 # DB_URL = settings["db_config"]["database_url"]
 TABLE_NAME = settings["db_config"]["tablename"]
 
-# AZURE_DEVOPS_PAT = settings["ado_config"]["AZURE_DEVOPS_PAT"]
-# ORGANIZATION = settings["ado_config"]["ORGANIZATION"]
-# PROJECT = settings["ado_config"]["PROJECT"]
-# PIPELINE_NAME = settings["ado_config"]["PIPELINE_NAME"]
-# BRANCH_NAME = settings["ado_config"]["BRANCH_NAME"]
-
-
 # =========================================#
 logging.basicConfig(
     level=log_level,
@@ -116,62 +109,7 @@ def initialize():
             logger.error("Failed to list storage instances: %s", e)
             logger.debug("Traceback:\n%s", traceback.format_exc())
             raise typer.Exit(code=1)
-
-        # if len(rows) == 0:
-        #     logger.info(
-        #         "No Storage Instance Found. creating the storage instance."
-        #     )
-        #     time.sleep(5)
-        #     logger.info("Storage Instance created Successfully.")
-        #     time.sleep(5)
-        #     msg = (
-        #         "Please add an existing storageInstanceSpec or new "
-        #         "storage instance spec to be created ....."
-        #     )
-        #     logger.info(msg)
-        #     rprint("Example (array):")
-        #     rprint(json.dumps([
-        #         {"name": "First item", "description": "Optional description"},
-        #         {"name": "Second item"}
-        #     ], indent=2))
-
-        #     try:
-        #         raw = typer.prompt("JSON")
-        #     except (EOFError, KeyboardInterrupt):
-        #         logger.warning("Input cancelled by user.")
-        #         raise typer.Abort()
-
-        #     try:
-        #         payload = json.loads(raw)
-        #         time.sleep(5)
-        #         with SessionLocal() as db:
-        #             add_storage_resource(db, payload, logger)
-        #     except json.JSONDecodeError as e:
-        #         rprint(f"[red]Invalid JSON: {e}[/red]")
-        #         logger.debug("Invalid JSON input: %s", raw)
-        #         raise typer.Abort()
-        #     except Exception as e:
-        #         logger.error("Failed to add storage resource: %s", e)
-        #         logger.debug("Traceback:\n%s", traceback.format_exc())
-        #         raise typer.Exit(code=1)
-        # else:
-        #     msg = (
-        #         "intialization is completed. "
-        #         "please proceed with the next command"
-        #     )
-        #     logger.info(msg)
-
-        # logger.info(
-        #     "eventSourceDefnInstance initialization is complete ...."
-        # )
-        # time.sleep(5)  # sleep interval for demo. To be removed.
-        # logger.info("ComputeInstance initialization is complete ....")
-        # time.sleep(5)  # sleep interval for demo. To be removed.
-        # msg = (
-        #     "All intialization is complete. "
-        #     "please proceed with the next command"
-        # )
-        # logger.info(msg)
+        
     except typer.Abort:
         # Preserve abort semantics
         raise
