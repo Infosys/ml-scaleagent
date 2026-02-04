@@ -1,0 +1,21 @@
+logging:  
+  level: DEBUG
+db_config:
+  database_url: ""  # Set via DATABASE_URL in .env file
+  pool_pre_ping: True
+  autocommit: False
+  autoflush: False
+  tablename: "deploymentSpecInstance"
+ado_config:
+  AZURE_DEVOPS_PAT : ""  # Set via AZURE_DEVOPS_PAT in .env file
+  ORGANIZATION : "RT-ML-Scaler"  
+  PROJECT : "ML-Scalar"  
+  PIPELINE_NAME : "ML-Simple" 
+  BRANCH_NAME : "josy/ml_scalar_cicd"
+service_principle_cred:
+  TENANT_ID : ""  # Set via TENANT_ID in .env file
+  CLIENT_ID : ""  # Set via CLIENT_ID in .env file
+  CLIENT_SECRET : ""  # Set via CLIENT_SECRET in .env file
+aks_config:
+  AKS_API_SERVER : "https://aks-cs-pcs-10001-dns-eh8o2gz9.hcp.eastus.azmk8s.io"  
+  NAMESPACE : "rt-ml-scalar"

@@ -1,0 +1,176 @@
+name: $(SourceBranchName)-$(Date:yyyyMMdd)-$(Rev:rrr)
+
+parameters:
+  - name: azureSubscription
+    type: string
+    default: 'ml-scalar-svc'
+  - name: acrRepo
+    type: string
+    default: "ml-scalar"
+  - name: strategyType
+    displayName: 'Deployment StrategyType'
+    type: string
+    default: 'RollingUpdate'
+    values:
+      - Recreate
+      - RollingUpdate
+  - name: maxSurge
+    displayName: 'Max Surge(%)'
+    type: string
+    default: '25%'
+  - name: maxUnavailable
+    displayName: 'Max Unavailable(%)'
+    type: string
+    default: '25%'  
+  - name: yamlConfig
+    displayName: 'yaml Content'
+    type: string
+
+
+trigger: none
+
+pool:
+  name: ML-Scalar 
+
+stages:
+  - stage: BuildImages
+    displayName: 'Build Experiments'
+    jobs:  
+      - job: BuildImages
+        displayName: 'Build Docker Images'
+        steps: 
+        - task: Bash@3
+          displayName: 'Databricks CLI configure'
+          inputs:
+            targetType: 'inline'
+            script: |
+              export PATH=$PATH:~/.local/bin
+              databricks configure --token <<EOF
+              <DATABRICKS_HOST>
+              <DATABRICKS_TOKEN>
+              EOF
+
+        - task: PythonScript@0
+          displayName: 'Export Model artifact from lab2'
+          inputs:
+            scriptSource: inline
+            pythonInterpreter: '/usr/bin/python3'
+            script: |
+              import json
+              import yaml
+              from mlflow.tracking import MlflowClient
+              import os
+              import mlflow
+              mlflow.set_tracking_uri("databricks")
+
+              yaml_string = os.getenv("yamlConfig")  # This is the variable you passed from FastAPI
+
+              content = yaml.safe_load(yaml_string)
+              modelName = content["modelArtifact"]["modelName"] 
+              version = content["modelArtifact"]["version"]
+              exp_name = content["experimentName"]
+              print(f"Model Name: {modelName}, Version: {version}, Experiment Name: {exp_name}")
+
+
+              remote_client = MlflowClient()
+              local_dir = f"/tmp/{exp_name}"
+              if not os.path.exists(local_dir):
+                  os.mkdir(local_dir)
+              model_uri = remote_client.get_model_version_download_uri(modelName, version)
+              print(model_uri)
+              local_path = mlflow.artifacts.download_artifacts(model_uri,dst_path=local_dir)
+              print("-----------------------------------------------------------------------")
+              print(local_dir)
+              print(os.listdir(local_dir))
+              print("-----------------------------------------------------------------------")
+              print(f'##vso[task.setvariable variable=local_path]{local_path}')
+              print(f'##vso[task.setvariable variable=exp_name]{exp_name}')
+          env:
+            yamlConfig: ${{ parameters.yamlConfig }}              
+        - task: PythonScript@0
+          name: "Dynamic_Code_generator_for_MLOPS"
+          inputs:
+            scriptSource: 'filePath'
+            pythonInterpreter: '/usr/bin/python3'
+            scriptPath: '$(Build.SourcesDirectory)/template/dynamiccodegenerator.py'
+            arguments: 'ml-scalar $(local_path) $(exp_name) $(Build.SourcesDirectory) $(Build.SourcesDirectory)/_temp/ml-scalar-$(Build.BuildId)-$(system.jobAttempt)- $(environment)'
+          env:
+            yamlConfig: ${{ parameters.yamlConfig }} 
+        - task: Docker@2
+          displayName: 'Build Docker Image'
+          inputs:
+            containerRegistry: 'ML-Scaler-ACR'
+            repository: '${{ parameters.acrRepo }}-$(exp_name)'
+            command: 'build'
+            Dockerfile: '$(Build.SourcesDirectory)/_temp/ml-scalar-$(Build.BuildId)-$(system.jobAttempt)-$(exp_name)/Dockerfile'
+            tags: |
+              $(Build.BuildId)
+              $(exp_name)
+            buildContext: '$(Build.SourcesDirectory)/_temp/ml-scalar-$(Build.BuildId)-$(system.jobAttempt)-$(exp_name)'
+            arguments: '--no-cache'
+
+        - task: Docker@2
+          displayName: 'Push Docker Image'
+          inputs:
+            containerRegistry: 'ML-Scaler-ACR'
+            repository: '${{ parameters.acrRepo }}-$(exp_name)'
+            command: 'push'
+            tags: |
+              $(Build.BuildId)
+              $(exp_name)            
+
+
+
+
+  - stage: Deployment
+    displayName: 'Model deployment'
+    dependsOn: 
+      - BuildImages
+    variables:
+      - name: serviceconnection
+        value: "ml-scalar-svc"
+      - name: aks_namespace
+        value: "rt-ml-scalar"
+      - name: environment
+        value: "dev"  
+      - group: 'Ml-scalar'
+    jobs:    
+      - deployment: "MLScalar"               
+        environment: ML-Scalar-App
+      - job: Deployment
+        displayName: 'Helm deployment'
+        steps:          
+          - task: PythonScript@0
+            displayName: 'Read content from Yaml'
+            inputs:
+              scriptSource: inline
+              pythonInterpreter: '/usr/bin/python3'
+              script: |
+                import yaml
+                import os
+
+                yaml_string = os.getenv("yamlConfig")  # This is the variable you passed from FastAPI
+                content = yaml.safe_load(yaml_string)
+                print(f'##vso[task.setvariable variable=exp_name]{content["experimentName"]}')
+                print(f'##vso[task.setvariable variable=consumergroup]{content["$(environment)"]["functionEnvBindings"]["srcConsumerGroup"]}')
+                print(f'##vso[task.setvariable variable=srceventhub]{content["$(environment)"]["functionEnvBindings"]["SrcEventHubName"]}')
+                print(f'##vso[task.setvariable variable=sinkeventhub]{content["$(environment)"]["functionEnvBindings"]["SinkEventHubName"]}')
+                print(f'##vso[task.setvariable variable=ground_sinkeventhubnamespacefqdn]{content["$(environment)"]["functionEnvBindings"]["SinkEventHubNamespace"]}')
+                print(f'##vso[task.setvariable variable=ground_srceventhubnamespacefqdn]{content["$(environment)"]["functionEnvBindings"]["SrcEventHubNamespace"]}')
+                print(f'##vso[task.setvariable variable=AzureWebJobsStorageAccount]{content["$(environment)"]["functionEnvBindings"]["AzureWebJobsStorageAccount"]}')
+                print(f'##vso[task.setvariable variable=cpulimit]{content["$(environment)"]["functionEnvBindings"]["cpuLimit"]}')
+                print(f'##vso[task.setvariable variable=memorylimit]{content["$(environment)"]["functionEnvBindings"]["memoryLimit"]}')
+                print(f'##vso[task.setvariable variable=maxreplica]{content["$(environment)"]["functionEnvBindings"]["maxReplica"]}')
+                print(f'##vso[task.setvariable variable=minreplica]{content["$(environment)"]["functionEnvBindings"]["minReplica"]}')
+            env:
+              yamlConfig: ${{ parameters.yamlConfig }} 
+          - task: AzureCLI@2
+            displayName: 'Deploy to AKS with Helm'
+            inputs:
+              azureSubscription: ${{ parameters.azureSubscription }}
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az account set --subscription <AZURE_SUBSCRIPTION_ID>
+                az aks get-credentials --resource-group <RESOURCE_GROUP> --name <AKS_CLUSTER_NAME>
+                helm upgrade --install $(exp_name)-$(environment) helm/modelservices --namespace $(aks_namespace) --set exp_name=$(exp_name) --set image.repository=${{ parameters.acrRepo }}-$(exp_name) --set image.tag=$(Build.BuildId) --set srceventhub=$(srceventhub) --set sinkeventhub=$(sinkeventhub) --set consumergroup=$(consumergroup) --set storageconnectionstring="DefaultEndpointsProtocol=https;AccountName=<AzureWebJobsStorageAccount>;AccountKey=<AzureWebJobsStorageAccountKey>;EndpointSuffix=core.windows.net" --set inputEHconnectionstring="Endpoint=sb://<eventhub-namespace>/;SharedAccessKeyName=<input-eh-accesspolicy>;SharedAccessKey=<input-eh-key>;EntityPath=<input-entity-path>" --set outputEHconnectionstring="Endpoint=sb://<eventhub-namespace>/;SharedAccessKeyName=<output-eh-accesspolicy>;SharedAccessKey=<output-eh-key>;EntityPath=<output-entity-path>" --set env=$(environment) --set memorylimit=$(memorylimit) --set cpulimit=$(cpulimit) --set maxreplica=$(maxReplica) --set minreplica=$(minReplica)

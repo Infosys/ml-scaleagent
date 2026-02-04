@@ -1,0 +1,30 @@
+
+[project]
+name = "fastapi-cli-sqlalchemy-postgres"
+version = "0.1.0"
+description = "FastAPI + SQLAlchemy + Postgres + Typer CLI"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.24",
+    "SQLAlchemy>=2.0",
+    "psycopg2-binary>=2.9",
+    "pydantic>=2.5",
+    "pydantic-settings>=2.0",
+    "typer>=0.12",
+    "rich>=13.7",
+    "python-dotenv>=1.0",
+    "PyYAML>=6.0",
+    "requests>=2.32.5",
+    "pytest==9.0.2",
+    "kubernetes==35.0.0",
+    "prettytable==3.17.0",
+]
+
+# This creates a command `mlscaler` on install
+[project.scripts]
+mlscaler = "app.cli.app:app" 
+
+[tool.setuptools]  
+packages = ["app"]  

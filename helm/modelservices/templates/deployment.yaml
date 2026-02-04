@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: function-app-{{ .Values.exp_name }}
+  labels:
+    app: function-app-{{ .Values.exp_name }}
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: function-app-{{ .Values.exp_name }}
+  template:
+    metadata:
+      labels:
+        app: function-app-{{ .Values.exp_name }}
+    spec:
+      containers:
+        - name: function-app-{{ .Values.exp_name }}
+          image: "acrcsPCS10001.azurecr.io/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "1500Mi"
+            limits:
+              memory: {{ .Values.memorylimit | default "256Mi" }}
+              cpu: {{ .Values.cpulimit | default "250m" }}
+          env:
+            - name: AZMON_COLLECT_ENV  
+              value: "False"
+            - name: SRC_EVENTHUB_TOPIC
+              value: {{ .Values.srceventhub }}
+            - name: SRC_EVENTHUB_CONSUMER_GROUP
+              value: {{ .Values.consumergroup }}
+            - name: DEST_EVENTHUB_TOPIC
+              value: {{ .Values.sinkeventhub }}
+            - name: AzureWebJobsStorage
+              value: {{ .Values.storageconnectionstring }}
+            - name: AzureEventHubConnectionString
+              value: {{ .Values.inputEHconnectionstring }}
+            - name: outputEHConnectionString
+              value: {{ .Values.outputEHconnectionstring }}
+            - name: ENV
+              value: "{{ .Values.env | default "dev" }}"
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: function-app-scaler-{{ .Values.exp_name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  scaleTargetRef:
+    name: function-app-{{ .Values.exp_name }}
+  minReplicaCount: {{ .Values.minreplica }}
+  maxReplicaCount: {{ .Values.maxreplica }} 
+  pollingInterval: 300 # How frequently we should go for metrics (in seconds)
+  cooldownPeriod:  300 # How many seconds should we wait for downscale  
+  triggers:
+  - type: azure-eventhub
+    metadata:
+      storageConnectionFromEnv: AzureWebJobsStorage
+      connectionFromEnv: AzureEventHubConnectionString
+      checkpointStrategy: blobMetadata
+      blobContainer: azure-webjobs-eventhub
+      consumerGroup: {{ .Values.consumergroup }}
+
+# (Service removed — simple Deployment only for quick AKS validation)
