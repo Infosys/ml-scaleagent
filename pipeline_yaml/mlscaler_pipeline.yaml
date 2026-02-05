@@ -3,10 +3,10 @@ name: $(SourceBranchName)-$(Date:yyyyMMdd)-$(Rev:rrr)
 parameters:
   - name: azureSubscription
     type: string
-    default: 'ml-scalar-svc'
+    default: ''  # <Your ARM service connection name>
   - name: acrRepo
     type: string
-    default: "ml-scalar"
+    default: ""  # <Your ACR Repository Name>
   - name: strategyType
     displayName: 'Deployment StrategyType'
     type: string
@@ -30,7 +30,7 @@ parameters:
 trigger: none
 
 pool:
-  name: ML-Scalar 
+  name: ''  # <Your Azure DevOps agent pool name>
 
 stages:
   - stage: BuildImages
@@ -99,7 +99,7 @@ stages:
         - task: Docker@2
           displayName: 'Build Docker Image'
           inputs:
-            containerRegistry: 'ML-Scaler-ACR'
+            containerRegistry: ''  # <Your Azure Container Registry service connection>
             repository: '${{ parameters.acrRepo }}-$(exp_name)'
             command: 'build'
             Dockerfile: '$(Build.SourcesDirectory)/_temp/ml-scalar-$(Build.BuildId)-$(system.jobAttempt)-$(exp_name)/Dockerfile'
@@ -112,7 +112,7 @@ stages:
         - task: Docker@2
           displayName: 'Push Docker Image'
           inputs:
-            containerRegistry: 'ML-Scaler-ACR'
+            containerRegistry: ''  # <Your Azure Container Registry service connection>
             repository: '${{ parameters.acrRepo }}-$(exp_name)'
             command: 'push'
             tags: |
@@ -128,15 +128,15 @@ stages:
       - BuildImages
     variables:
       - name: serviceconnection
-        value: "ml-scalar-svc"
+        value: ""  # <Your ARM service connection name>
       - name: aks_namespace
-        value: "rt-ml-scalar"
+        value: ""  # <Your Kubernetes namespace>
       - name: environment
         value: "dev"  
-      - group: 'Ml-scalar'
+      - group: ''  # <Your Azure DevOps variable group name>
     jobs:    
       - deployment: "MLScalar"               
-        environment: ML-Scalar-App
+        environment: ''  # <Your Azure DevOps environment name>
       - job: Deployment
         displayName: 'Helm deployment'
         steps:          

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: function-app-{{ .Values.exp_name }}
-          image: "acrcsPCS10001.azurecr.io/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "<your-acr-login-server>/{{ .Values.image.repository }}:{{ .Values.image.tag }}"  # Replace <your-acr-login-server> with your Azure Container Registry login server
           imagePullPolicy: IfNotPresent
           resources:
             requests:

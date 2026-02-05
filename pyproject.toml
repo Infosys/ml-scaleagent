@@ -1,10 +1,29 @@
 
 [project]
-name = "fastapi-cli-sqlalchemy-postgres"
+name = "mlscaler"
 version = "0.1.0"
-description = "FastAPI + SQLAlchemy + Postgres + Typer CLI"
+description = "ML deployment management system for Kubernetes-based machine learning model scaling and orchestration"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Infosys Limited", email = "opensource@infosys.com"}
+]
+keywords = ["mlops", "kubernetes", "machine-learning", "deployment", "scaling", "azure", "databricks", "model-serving"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Distributed Computing",
+]
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.24",
@@ -21,6 +40,12 @@ dependencies = [
     "kubernetes==35.0.0",
     "prettytable==3.17.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Infosys/mlscaler"
+Repository = "https://github.com/Infosys/mlscaler"
+Documentation = "https://github.com/Infosys/mlscaler#readme"
+"Bug Tracker" = "https://github.com/Infosys/mlscaler/issues"
 
 # This creates a command `mlscaler` on install
 [project.scripts]

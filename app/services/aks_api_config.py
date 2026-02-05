@@ -72,7 +72,7 @@ def aks_api_config(silent=False):
         try:
             configuration = client.Configuration()
             configuration.host = AKS_API_SERVER
-            configuration.verify_ssl = False
+            configuration.verify_ssl = True
             configuration.api_key = {"authorization": f"Bearer {token}"}
 
             api_client = ApiClient(configuration)
