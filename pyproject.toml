@@ -41,11 +41,6 @@ dependencies = [
     "prettytable==3.17.0",
 ]
 
-[project.urls]
-Homepage = "https://github.com/Infosys/mlscaler"
-Repository = "https://github.com/Infosys/mlscaler"
-Documentation = "https://github.com/Infosys/mlscaler#readme"
-"Bug Tracker" = "https://github.com/Infosys/mlscaler/issues"
 
 # This creates a command `mlscaler` on install
 [project.scripts]
