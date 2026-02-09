@@ -59,14 +59,17 @@ cp env.example .env
    ```
 
 2. Configure required environment variables in `.env`:
-   - **Database**: `DATABASE_URL`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
-   - **Azure DevOps**: `AZURE_DEVOPS_PAT`, `ORGANIZATION`, `PROJECT`, `PIPELINE_NAME`
+   - **Database**: `DATABASE_URL`
+   - **Azure DevOps**: `AZURE_DEVOPS_PAT`
    - **Azure Service Principal**: `TENANT_ID`, `CLIENT_ID`, `CLIENT_SECRET`
-   - **AKS**: `AKS_API_SERVER`, `NAMESPACE`
+   - **Azure Databricks Configurations**: `DATABRICKS_HOST`, `DATABRICKS_TOKEN`
 
 3. Update `app/config.yaml` with non-sensitive configuration:
-   - Azure DevOps organization, project, pipeline, and branch names
-   - AKS namespace (can also be set via environment)
+   - Azure DevOps organization, project, pipeline, and branch name
+   - AKS api_server & namespace 
+   - You can also handle the logging_level, db_config non-sensitive informations accordingly.  
+
+## NOTE:----> You can set the configurations either in ".env" file or  "app/config.yaml" accordingly based on sensitivity.
 
 4. **For Production**: Use Azure Key Vault or similar secret management service instead of `.env` files
 
@@ -79,7 +82,7 @@ cp env.example .env
 docker-compose up
 
 # Or locally
-uvicorn app.api.main:app --reload
+python -m uvicorn app.api.main:app --reload
 ```
 
 API will be available at `http://localhost:8000`
@@ -92,7 +95,7 @@ API will be available at `http://localhost:8000`
 
 mlscaler --help
 
-#Above command will guide you how to use defined cli commands 
+      [ABOVE COMMAND WILL GUIDE YOU HOW TO USE DEFINED CLI COMMANDS] 
 
 ## Architecture
 
