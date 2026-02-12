@@ -15,8 +15,8 @@ Thank you for your interest in contributing to ML-Scaler! We welcome contributio
 
 1. **Fork the repository** and create your branch from `cli`
 2. **Make your changes** with clear, descriptive commit messages
-3. **Add tests** for any new functionality
-4. **Ensure all tests pass** by running `pytest`
+3. **Follow code quality standards** for any new functionality
+4. **Ensure code follows PEP 8 guidelines** and is well-documented
 5. **Update documentation** if you're changing functionality
 6. **Submit a pull request** with a clear description of changes
 
@@ -31,12 +31,11 @@ cd ML-Scaler
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install development dependencies
+# Install dependencies
 pip install -e .
-pip install pytest pytest-cov
 
-# Run tests
-pytest
+# Verify installation
+mlscaler --help
 ```
 
 ### Code Style

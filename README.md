@@ -108,20 +108,13 @@ mlscaler --help
 - **Kubernetes Client** - AKS cluster interaction
 - **Azure DevOps API** - CI/CD pipeline orchestration
 
-## Testing
+## Code Quality
 
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=app tests/
-```
+This project follows Python best practices and PEP 8 guidelines. Future versions may include automated testing.
 
 ## Contributing
 
 Contributions are welcome! Please ensure:
-- All tests pass
 - Code follows project style guidelines
 - Documentation is updated as needed
 
