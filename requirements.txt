@@ -25,5 +25,7 @@ typer>=0.12
 rich>=13.7
 python-dotenv>=1.0
 PyYAML>=6.0
-kubernetes
-prettytable
+requests>=2.32.5
+pytest==9.0.2
+kubernetes==35.0.0
+prettytable==3.17.0

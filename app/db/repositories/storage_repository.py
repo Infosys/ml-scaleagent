@@ -83,13 +83,3 @@ def add_storage_resource(db: Session, payload_list: storageInstanceCreate, logge
     except Exception as e:
         logger.error(f"Error adding storage resources: {e}")
         raise
-
-# def add_storage_resource(db: Session, payload: storageInstanceCreate, logger):
-#     storage_instance_obj = StorageInstance(**payload.dict())
-#     db.add(storage_instance_obj)
-#     db.commit()
-#     db.refresh(storage_instance_obj)
-#     logger.info(
-#         f"Successfully added the StorageInstance: "
-#         f"{storage_instance_obj.instanceName}")
-#     return "200"

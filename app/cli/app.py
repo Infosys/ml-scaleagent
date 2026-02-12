@@ -15,12 +15,7 @@
 # accordance with the terms of the license agreement you entered into with Infosys Limited.
 
 
-from pathlib import Path
-import sys
-# Add project_root to Python path
-project_root = Path(__file__).resolve().parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+
 import json  # noqa: E402
 import re as r  # noqa: E402
 import time  # noqa: E402
@@ -59,7 +54,13 @@ from app.services.list_deployments import (  # noqa: E402
 from app.services.delete_deployment import (  # noqa: E402
     delete_deployment_from_aks)
 from startup import check_postgres_health  # noqa: E402
+from pathlib import Path  # noqa: E402
+import sys  # noqa: E402
 
+# Add project_root to Python path
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 logging.getLogger("kubernetes").setLevel(logging.WARNING)
 urllib3.disable_warnings()
