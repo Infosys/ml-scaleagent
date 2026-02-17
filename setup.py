@@ -21,7 +21,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="mlscaler",
-    version="0.1.0",
+    version="1.0.0",
     author="Infosys Limited",
     author_email="opensource@infosys.com",
     description="ML deployment management system for Kubernetes-based machine learning model scaling and orchestration",
