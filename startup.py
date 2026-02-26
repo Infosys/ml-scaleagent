@@ -15,11 +15,11 @@
 # accordance with the terms of the license agreement you entered into with Infosys Limited.
 
 import sys
-import yaml
 import psycopg2
 import subprocess
 import importlib.util
 import logging
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -53,23 +53,9 @@ except Exception as e:
 
 def check_postgres_health():
     try:
-        try:
-            with open("./app/config.yaml", "r") as f:
-                config = yaml.safe_load(f)
-            if not config:
-                raise ValueError("Config file is empty")
-        except FileNotFoundError:
-            logger.error("[startup] Config file not found at ./app/config.yaml")
-            sys.exit(1)
-        except yaml.YAMLError as e:
-            logger.error(f"[startup] Invalid YAML in config file: {e}")
-            sys.exit(1)
-        except Exception as e:
-            logger.error(f"[startup] Error reading config file: {e}")
-            sys.exit(1)
 
         try:
-            db_url = config["db_config"]["database_url"]
+            db_url = settings["db_config"]["database_url"]
             if not db_url:
                 raise ValueError("Database URL is empty")
         except KeyError as e:

@@ -53,14 +53,16 @@ from app.services.list_deployments import (  # noqa: E402
     list_deployments, identify_deployment)
 from app.services.delete_deployment import (  # noqa: E402
     delete_deployment_from_aks)
-from startup import check_postgres_health  # noqa: E402
 from pathlib import Path  # noqa: E402
 import sys  # noqa: E402
 
 # Add project_root to Python path
 project_root = Path(__file__).resolve().parent.parent.parent
 if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+    sys.path.insert(0, str(project_root)) 
+
+from startup import check_postgres_health # noqa: E402
+
 
 logging.getLogger("kubernetes").setLevel(logging.WARNING)
 urllib3.disable_warnings()
