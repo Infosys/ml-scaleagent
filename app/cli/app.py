@@ -450,6 +450,8 @@ def create_deployment(
                     logger.error(f"Failed to trigger pipeline: {e}")
                     logger.debug(f"Traceback:\n{traceback.format_exc()}")
                     rprint(f"[red]Error: Failed to trigger pipeline - {e}[/red]")
+                    if "No DB configuration found" in str(e):
+                        rprint("\n[yellow]Please add the required resource configurations using:\n\nadd-resource --help[/yellow]")
                     raise typer.Exit(code=1)
 
                 run_id = result.get("run_id") if isinstance(result, dict) else None
@@ -551,6 +553,8 @@ def create_deployment(
             logger.error(f"Failed to trigger pipeline: {e}")
             logger.debug(f"Traceback:\n{traceback.format_exc()}")
             rprint(f"[red]Error: Failed to trigger pipeline - {e}[/red]")
+            if "No DB configuration found" in str(e):
+                rprint("\n[yellow]Please add the required resource configurations using:\n\nadd-resource --help[/yellow]")
             raise typer.Exit(code=1)
 
         run_id = result.get("run_id") if isinstance(result, dict) else None
@@ -678,6 +682,8 @@ def update_deployment(
                 logger.error(f"Failed to trigger pipeline: {e}")
                 logger.debug(f"Traceback:\n{traceback.format_exc()}")
                 rprint(f"[red]Error: Failed to trigger pipeline - {e}[/red]")
+                if "No DB configuration found" in str(e):
+                    rprint("\n[yellow]Please add the required resource configurations using:\n\nadd-resource --help[/yellow]")
                 return
 
             run_id = result.get("run_id") if isinstance(result, dict) else None
