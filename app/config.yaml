@@ -1,0 +1,37 @@
+# /******************************************************************
+# © 2025-2026 Infosys Limited, Bangalore, India. All Rights Reserved.
+# Infosys believes the information in this document is accurate as of its publication date;
+# such information is subject to change without notice. Infosys acknowledges the proprietary
+# rights of other companies to the trademarks, product names and such other intellectual property
+# rights mentioned in this document. Except as expressly permitted, neither this documentation nor
+# any part of it may be reproduced, stored in a retrieval system, or transmitted in any form or by
+# any means, electronic, mechanical, printing, photocopying, recording or otherwise, without the prior
+# permission of Infosys Limited and/or any named intellectual property rights holders under this document.
+# *******************************************************************/
+
+# PROPRIETARY NOTICE
+# This software is confidential and proprietary information of Infosys Limited.
+# You shall not disclose such Confidential Information and shall use it only in
+# accordance with the terms of the license agreement you entered into with Infosys Limited.
+
+logging:  
+  level: DEBUG
+db_config:
+  database_url: ""  # Set via DATABASE_URL in .env file
+  pool_pre_ping: True
+  autocommit: False
+  autoflush: False
+  tablename: "deploymentSpecInstance"
+ado_config:
+  AZURE_DEVOPS_PAT : ""  # Your Azure DevOps Personal Access Token (set via .env file)
+  ORGANIZATION : ""  # Your Azure DevOps organization name
+  PROJECT : ""  # Your Azure DevOps project name
+  PIPELINE_NAME : ""  # Your Azure DevOps pipeline name
+  BRANCH_NAME : ""  # Your Azure DevOps branch name
+service_principle_cred:
+  TENANT_ID : ""  # Set via TENANT_ID in .env file
+  CLIENT_ID : ""  # Set via CLIENT_ID in .env file
+  CLIENT_SECRET : ""  # Set via CLIENT_SECRET in .env file
+aks_config:
+  AKS_API_SERVER : ""  # Your AKS cluster API server URL
+  NAMESPACE : ""  # Your Kubernetes namespace
