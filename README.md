@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-ML OPS Agent for Data Science
-=======
 
 # ML-Scaler
 
