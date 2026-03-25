@@ -164,7 +164,7 @@ ML-Scaler functionalities are also available through subscription-based platform
 
 - **de.ai Platform by Infosys** - Enterprise-grade implementation of ML-Scaler with enhanced features and support.
 
-<img width="481" height="520" alt="image" src="https://github.com/user-attachments/assets/3cc4acc7-11a7-4731-a3a4-27da1f588f6c" />
+<img width="832" height="880" alt="image" src="https://github.com/user-attachments/assets/c1ab789f-fbc7-4dee-8927-2f76bf2b828f" />
 
 <img width="820" height="790" alt="image" src="https://github.com/user-attachments/assets/c73afc1d-81b7-473d-a3bc-1bb81562140b" />
 
