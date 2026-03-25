@@ -15,7 +15,7 @@ A comprehensive ML deployment management system for Kubernetes-based machine lea
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- Python 3.10 or higher version
 - Docker and Docker Compose
 - PostgreSQL database
 - Databricks workspace and access token
