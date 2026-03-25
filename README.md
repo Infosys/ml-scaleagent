@@ -27,7 +27,7 @@ A comprehensive ML deployment management system for Kubernetes-based machine lea
 
 ### Installation
 
-#### Using Docker Compose (Recommended)
+#### Using Docker Compose ((Recommended))
 
 Using a Docker Compose file along with a local environment file and configuration YAML values will bring the CLI wrapper up and running.
 
