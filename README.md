@@ -86,32 +86,53 @@ cp env.example .env
 
 mlscaler --help
 
+![mlscaler help output](images/mlscaler-help.png)
+
       [ABOVE COMMAND WILL GUIDE YOU HOW TO USE DEFINED CLI COMMANDS] 
+
+![mlscaler help](images/mlscaler_help.png)
 
 #CLI commands offered by mlscaler
 
 #### `initialize`
 Initialize environment, check DB health, and ensure required tables are present.
 
+![mlscaler initialize](images/mlscaler_initialize.png)
+
 #### `add-resource`
 Add configuration for required instance resources (storage, compute, event source, deployment spec) to DB.
+
+![mlscaler add resource](images/mlscaler_addresource.png)
 
 #### `create-deployment --deployment-name <name>`
 Trigger deployment for a specific deployment name. Checks AKS for existing deployment first. Use `--overwrite-deployment` flag if deployment already exists.
 It has provision to check the pipeline status as well.
 
+![mlscaler create deployment 1](images/mlscaler_createdep_1.png)
+![mlscaler create deployment 2](images/mlscaler_createdep_2.png)
+![mlscaler create deployment 3](images/mlscaler_createdep_3.png)
+
 #### `update-deployment --deployment-name <name>`
 Update configuration key-values for a deployment in DB. On user confirmation, triggers pipeline with updated configurations.
 On trigger, it has provision to check the pipeline status as well.
 
+![mlscaler update deployment](images/mlscaler_updatedep.png)
+
 #### `view-deployment --deployment-name <name>`
 View DB configurations and AKS deployment details for a specific deployment.
+
+![mlscaler view deployment](images/mlscaler_viewdep.png)
+![mlscaler view deployment 1](images/mlscaler_viewDep_1.png)
 
 #### `list-deployments`
 List all deployments available in AKS under the configured namespace.
 
+![mlscaler list deployments](images/mlscaler_listdeployments.png)
+
 #### `check-deployment-status --deployment-name <name>`
 Check deployment status in AKS for a specific deployment.
+
+![mlscaler check deployment](images/mlscaler_checkdep.png)
 
 #### `delete-deployment --deployment-name <name>`
 Delete deployment from AKS and DB configuration on user confirmation.
