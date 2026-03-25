@@ -166,6 +166,7 @@ ML-Scaler functionalities are also available through subscription-based platform
 
 <img width="832" height="880" alt="image" src="https://github.com/user-attachments/assets/c1ab789f-fbc7-4dee-8927-2f76bf2b828f" />
 
+
 <img width="820" height="790" alt="image" src="https://github.com/user-attachments/assets/c73afc1d-81b7-473d-a3bc-1bb81562140b" />
 
 For subscription details and platform access, please contact our team.
