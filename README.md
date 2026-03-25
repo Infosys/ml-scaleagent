@@ -158,6 +158,8 @@ ML-Scaler functionalities are also available through subscription-based platform
 
 ![ChatBot](images/chatBot.png)
 
+<img width="1396" height="516" alt="image" src="https://github.com/user-attachments/assets/b23be0a3-b5b0-477f-a1c1-adf8ffed5c2a" />
+
 - **de.ai Platform by Infosys** - Enterprise-grade implementation of ML-Scaler with enhanced features and support
 
 ![de.ai 1](images/de.ai_1.png)
