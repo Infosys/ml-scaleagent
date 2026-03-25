@@ -80,60 +80,66 @@ cp env.example .env
 
 ### CLI Interface
 
-**To see functionalities available:**
+
+**CLI commands offered by mlscaler:**
 
 `mlscaler --help`
 
-![mlscaler help output](images/mlscaler-help.png)
 
 [ABOVE COMMAND WILL GUIDE YOU HOW TO USE DEFINED CLI COMMANDS]
 
 <img width="1593" height="537" alt="image" src="https://github.com/user-attachments/assets/b329ee5b-ace7-4382-a29a-6089e99ce441" />
 
-**CLI commands offered by mlscaler:**
 
 #### `initialize`
 Initialize environment, check DB health, and ensure required tables are present.
 
-![mlscaler initialize](images/mlscaler_initialize.png)
+<img width="1918" height="163" alt="image" src="https://github.com/user-attachments/assets/d9fc2cd3-d943-4e96-8d5f-45f6b9715eb3" />
+
 
 #### `add-resource`
 Add configuration for required instance resources (storage, compute, event source, deployment spec) to DB.
 
-![mlscaler add resource](images/mlscaler_addresource.png)
+<img width="1917" height="703" alt="image" src="https://github.com/user-attachments/assets/799419c0-e7d0-45a5-99c0-e9944c2f539d" />
+
 
 #### `create-deployment --deployment-name <name>`
 Trigger deployment for a specific deployment name. Checks AKS for existing deployment first. Use `--overwrite-deployment` flag if deployment already exists.
 It has provision to check the pipeline status as well.
 
-![mlscaler create deployment 1](images/mlscaler_createdep_1.png)
-![mlscaler create deployment 2](images/mlscaler_createdep_2.png)
-![mlscaler create deployment 3](images/mlscaler_createdep_3.png)
+<img width="1911" height="203" alt="image" src="https://github.com/user-attachments/assets/1b5fbb7b-7362-4a99-bd96-ebf330d58e33" />
+<img width="1905" height="139" alt="image" src="https://github.com/user-attachments/assets/d4693a57-fafb-4c7f-8271-529c22aa01ab" />
+<img width="1903" height="70" alt="image" src="https://github.com/user-attachments/assets/03a3aab8-484d-40ba-9ec5-46681df998b3" />
+
 
 #### `update-deployment --deployment-name <name>`
 Update configuration key-values for a deployment in DB. On user confirmation, triggers pipeline with updated configurations.
 On trigger, it has provision to check the pipeline status as well.
 
-![mlscaler update deployment](images/mlscaler_updatedep.png)
+<img width="1918" height="315" alt="image" src="https://github.com/user-attachments/assets/d9e35f21-3763-4237-ba27-98b0da45b155" />
+
 
 #### `view-deployment --deployment-name <name>`
 View DB configurations and AKS deployment details for a specific deployment.
+<img width="1733" height="526" alt="image" src="https://github.com/user-attachments/assets/f31a0452-d150-4035-91d8-a651654e50d4" />
+<img width="1914" height="190" alt="image" src="https://github.com/user-attachments/assets/e1be76a0-965b-4135-9b03-9e2d8ee81115" />
 
-![mlscaler view deployment](images/mlscaler_viewdep.png)
-![mlscaler view deployment 1](images/mlscaler_viewDep_1.png)
 
 #### `list-deployments`
 List all deployments available in AKS under the configured namespace.
 
-![mlscaler list deployments](images/mlscaler_listdeployments.png)
+<img width="1915" height="382" alt="image" src="https://github.com/user-attachments/assets/34b4768b-da27-40de-abf4-5fd98c84b812" />
+
 
 #### `check-deployment-status --deployment-name <name>`
 Check deployment status in AKS for a specific deployment.
+<img width="1909" height="384" alt="image" src="https://github.com/user-attachments/assets/1e74c7e8-11f5-497f-9fbc-31dbbf80f126" />
 
-![mlscaler check deployment](images/mlscaler_checkdep.png)
 
 #### `delete-deployment --deployment-name <name>`
 Delete deployment from AKS and DB configuration on user confirmation.
+<img width="1894" height="610" alt="image" src="https://github.com/user-attachments/assets/0725711d-4f15-46cc-acca-896472bb3c18" />
+
 
 ## Architecture
 
@@ -150,12 +156,13 @@ This project follows Python best practices and PEP 8 guidelines. Future versions
 ## Subscription-Based Offerings
 
 ML-Scaler functionalities are also available through subscription-based platforms:
+
 - **ChatBot Integration** - Access ML-Scaler features through an intelligent conversational interface
 
 
 <img width="1396" height="516" alt="image" src="https://github.com/user-attachments/assets/b23be0a3-b5b0-477f-a1c1-adf8ffed5c2a" />
 
-- **de.ai Platform by Infosys** - Enterprise-grade implementation of ML-Scaler with enhanced features and support
+- **de.ai Platform by Infosys** - Enterprise-grade implementation of ML-Scaler with enhanced features and support.
 
 <img width="481" height="520" alt="image" src="https://github.com/user-attachments/assets/3cc4acc7-11a7-4731-a3a4-27da1f588f6c" />
 
