@@ -90,7 +90,8 @@ mlscaler --help
 
       [ABOVE COMMAND WILL GUIDE YOU HOW TO USE DEFINED CLI COMMANDS] 
 
-![mlscaler help](images/mlscaler_help.png)
+<img width="1593" height="537" alt="image" src="https://github.com/user-attachments/assets/b329ee5b-ace7-4382-a29a-6089e99ce441" />
+
 
 #CLI commands offered by mlscaler
 
@@ -156,14 +157,14 @@ This project follows Python best practices and PEP 8 guidelines. Future versions
 ML-Scaler functionalities are also available through subscription-based platforms:
 - **ChatBot Integration** - Access ML-Scaler features through an intelligent conversational interface
 
-![ChatBot](images/chatBot.png)
 
 <img width="1396" height="516" alt="image" src="https://github.com/user-attachments/assets/b23be0a3-b5b0-477f-a1c1-adf8ffed5c2a" />
 
 - **de.ai Platform by Infosys** - Enterprise-grade implementation of ML-Scaler with enhanced features and support
 
-![de.ai 1](images/de.ai_1.png)
-![de.ai 2](images/de.ai_2.png)
+<img width="481" height="520" alt="image" src="https://github.com/user-attachments/assets/3cc4acc7-11a7-4731-a3a4-27da1f588f6c" />
+
+<img width="820" height="790" alt="image" src="https://github.com/user-attachments/assets/c73afc1d-81b7-473d-a3bc-1bb81562140b" />
 
 For subscription details and platform access, please contact our team.
 
