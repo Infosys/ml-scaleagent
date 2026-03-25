@@ -80,20 +80,17 @@ cp env.example .env
 
 ### CLI Interface
 
-```bash
+**To see functionalities available:**
 
-#To see functionalities available
-
-mlscaler --help
+`mlscaler --help`
 
 ![mlscaler help output](images/mlscaler-help.png)
 
-      [ABOVE COMMAND WILL GUIDE YOU HOW TO USE DEFINED CLI COMMANDS] 
+[ABOVE COMMAND WILL GUIDE YOU HOW TO USE DEFINED CLI COMMANDS]
 
 <img width="1593" height="537" alt="image" src="https://github.com/user-attachments/assets/b329ee5b-ace7-4382-a29a-6089e99ce441" />
 
-
-#CLI commands offered by mlscaler
+**CLI commands offered by mlscaler:**
 
 #### `initialize`
 Initialize environment, check DB health, and ensure required tables are present.
@@ -137,8 +134,6 @@ Check deployment status in AKS for a specific deployment.
 
 #### `delete-deployment --deployment-name <name>`
 Delete deployment from AKS and DB configuration on user confirmation.
-
-```
 
 ## Architecture
 
