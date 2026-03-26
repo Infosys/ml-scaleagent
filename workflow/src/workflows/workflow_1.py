@@ -16,7 +16,6 @@ def main(events: List[func.EventHubEvent]) -> str:
         logging.info(result)
         logging.info("-----------------------------------")
         return result
-        # return result
     except Exception as ex:
         logging.info("HELLO FROM EXCEPTION BLOCK--------------------------" + str(ex))
         logging.error(traceback.format_exc())
