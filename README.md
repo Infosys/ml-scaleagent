@@ -1,7 +1,7 @@
 
 # ML-Scaler
 
-A comprehensive ML deployment management system for Kubernetes-based machine learning model scaling and orchestration. ML-Scaler provides automated deployment, scaling, and lifecycle management for ML models on Azure Kubernetes Service (AKS) with Databricks integration.
+A comprehensive declarative ML deployment management system for Kubernetes-based machine learning model for real time scaling and orchestration. ML-Scaler provides automated deployment, scaling, real time inference and lifecycle management for ML models on  Kubernetes Service such as AKS, GKE, EKS etc levearging KEDA.
 
 ## Features
 
@@ -19,7 +19,7 @@ A comprehensive ML deployment management system for Kubernetes-based machine lea
 - PostgreSQL database
 - Azure Kubernetes Service (AKS) cluster
 - Azure DevOps account (for pipeline integration)
-- Azure Service Principal credentials
+- Service Principal credentials such as Azure Service Principal
 
 ## Quick Start Guide
 
