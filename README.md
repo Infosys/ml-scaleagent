@@ -153,26 +153,6 @@ Delete deployment from AKS and DB configuration on user confirmation.
 
 This project follows Python best practices and PEP 8 guidelines. Future versions may include automated testing.
 
-## Subscription-Based Offerings
-
-ML-Scaler functionalities are also available through subscription-based platforms:
-
-- **ChatBot Integration** - Access ML-Scaler features through an intelligent conversational interface
-
-
-<img width="1396" height="516" alt="image" src="https://github.com/user-attachments/assets/b23be0a3-b5b0-477f-a1c1-adf8ffed5c2a" />
-
-
-- **de.ai Platform by Infosys** - Enterprise-grade implementation of ML-Scaler with enhanced features and support.
-
-
-<img width="832" height="880" alt="image" src="https://github.com/user-attachments/assets/c1ab789f-fbc7-4dee-8927-2f76bf2b828f" />
-
-
-<img width="820" height="790" alt="image" src="https://github.com/user-attachments/assets/c73afc1d-81b7-473d-a3bc-1bb81562140b" />
-
-For subscription details and platform access, please contact our team.
-
 ## Contributing
 
 Contributions are welcome! Please ensure:
