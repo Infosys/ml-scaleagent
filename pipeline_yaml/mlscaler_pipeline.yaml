@@ -16,13 +16,17 @@
 
 name: $(SourceBranchName)-$(Date:yyyyMMdd)-$(Rev:rrr)
 
+# This pipeline is intentionally manual (`trigger: none`).
+# It expects a Linux build agent with: Docker, Python 3, Helm, Azure CLI, and (if using Databricks) the Databricks CLI + MLflow deps.
+# Many placeholders below (e.g., <...>) must be replaced via Variable Groups / secret variables / service connections.
+
 parameters:
   - name: azureSubscription
     type: string
-    default: ''  # <Your ARM service connection name>
+    default: ''  # REQUIRED: Azure DevOps ARM service connection name used by AzureCLI@2.
   - name: acrRepo
     type: string
-    default: ""  # <Your ACR Repository Name>
+    default: ""  # REQUIRED: ACR repository base name (image repo becomes `${acrRepo}-$(exp_name)`).
   - name: strategyType
     displayName: 'Deployment StrategyType'
     type: string
@@ -41,12 +45,20 @@ parameters:
   - name: yamlConfig
     displayName: 'yaml Content'
     type: string
+    # REQUIRED: A YAML document (as a string) containing at least:
+    # - experimentName
+    # - modelArtifact.modelName
+    # - modelArtifact.version
+    # - <env>.functionEnvBindings.* (if used in Deployment stage)
+    # NOTE: Large YAML strings can hit Azure Pipelines parameter length limits; consider storing this in a file/artifact if it grows.
 
 
 trigger: none
 
+# Consider adding `pr:` or a branch trigger if you want CI behavior.
+
 pool:
-  name: ''  # <Your Azure DevOps agent pool name>
+  name: ''  # REQUIRED: Azure DevOps agent pool name. Use a pool that can run Docker builds (Linux recommended).
 
 stages:
   - stage: BuildImages
@@ -61,6 +73,8 @@ stages:
             targetType: 'inline'
             script: |
               export PATH=$PATH:~/.local/bin
+              # NOTE: Assumes `databricks` CLI is already installed on the agent.
+              # SECURITY: Do NOT hardcode host/token. Prefer secret variables or a service connection.
               databricks configure --token <<EOF
               <DATABRICKS_HOST>
               <DATABRICKS_TOKEN>
@@ -77,9 +91,11 @@ stages:
               from mlflow.tracking import MlflowClient
               import os
               import mlflow
+              # Requires: `pyyaml`, `mlflow` (and Databricks/MLflow auth configured on the agent).
               mlflow.set_tracking_uri("databricks")
 
-              yaml_string = os.getenv("yamlConfig")  # This is the variable you passed from FastAPI
+              # `yamlConfig` is passed via `env:` below from the pipeline parameter.
+              yaml_string = os.getenv("yamlConfig")
 
               content = yaml.safe_load(yaml_string)
               modelName = content["modelArtifact"]["modelName"] 
@@ -110,12 +126,14 @@ stages:
             pythonInterpreter: '/usr/bin/python3'
             scriptPath: '$(Build.SourcesDirectory)/template/dynamiccodegenerator.py'
             arguments: 'ml-scalar $(local_path) $(exp_name) $(Build.SourcesDirectory) $(Build.SourcesDirectory)/_temp/ml-scalar-$(Build.BuildId)-$(system.jobAttempt)- $(environment)'
+            # NOTE: `$(environment)` is referenced here, but `environment` is only defined later under the `Deployment` stage.
+            # If this argument is required during build, define `environment` at the pipeline root or in this stage/job variables.
           env:
             yamlConfig: ${{ parameters.yamlConfig }} 
         - task: Docker@2
           displayName: 'Build Docker Image'
           inputs:
-            containerRegistry: ''  # <Your Azure Container Registry service connection>
+            containerRegistry: ''  # REQUIRED: Azure Container Registry service connection.
             repository: '${{ parameters.acrRepo }}-$(exp_name)'
             command: 'build'
             Dockerfile: '$(Build.SourcesDirectory)/_temp/ml-scalar-$(Build.BuildId)-$(system.jobAttempt)-$(exp_name)/Dockerfile'
@@ -128,7 +146,7 @@ stages:
         - task: Docker@2
           displayName: 'Push Docker Image'
           inputs:
-            containerRegistry: ''  # <Your Azure Container Registry service connection>
+            containerRegistry: ''  # REQUIRED: same ACR service connection used for build.
             repository: '${{ parameters.acrRepo }}-$(exp_name)'
             command: 'push'
             tags: |
@@ -144,15 +162,18 @@ stages:
       - BuildImages
     variables:
       - name: serviceconnection
-        value: ""  # <Your ARM service connection name>
+        value: ""  # Optional/legacy: prefer using the `azureSubscription` parameter directly.
       - name: aks_namespace
-        value: ""  # <Your Kubernetes namespace>
+        value: ""  # REQUIRED: Kubernetes namespace where Helm will deploy.
       - name: environment
-        value: "dev"  
-      - group: ''  # <Your Azure DevOps variable group name>
+        value: "dev"  # Deployment environment key used in yamlConfig (e.g., dev/test/prod).
+      - group: ''  # Optional: Variable group for secrets (EventHub keys, storage keys, etc.). Mark secrets as secret variables.
     jobs:    
-      - deployment: "MLScalar"               
-        environment: ''  # <Your Azure DevOps environment name>
+      # FIXME: This `deployment` job is currently empty (no `strategy`/`steps`) and will fail YAML validation in Azure Pipelines.
+      # If you want to use an environment with approvals, convert the Helm steps below into a proper `deployment` job,
+      # or remove this block and keep only the standard `job: Deployment`.
+      - deployment: "MLScalar"
+        environment: ''  # Optional: Azure DevOps environment name (for approvals/checks).
       - job: Deployment
         displayName: 'Helm deployment'
         steps:          
@@ -165,7 +186,10 @@ stages:
                 import yaml
                 import os
 
-                yaml_string = os.getenv("yamlConfig")  # This is the variable you passed from FastAPI
+                # `yamlConfig` is passed via `env:` below from the pipeline parameter.
+                # NOTE: Azure Pipelines variables like `$(environment)` do NOT expand inside Python string literals.
+                # If you intend to index `content[environment]`, read it from env (e.g., `os.getenv("environment")`) and pass it via `env:`.
+                yaml_string = os.getenv("yamlConfig")
                 content = yaml.safe_load(yaml_string)
                 print(f'##vso[task.setvariable variable=exp_name]{content["experimentName"]}')
                 print(f'##vso[task.setvariable variable=consumergroup]{content["$(environment)"]["functionEnvBindings"]["srcConsumerGroup"]}')
@@ -187,6 +211,11 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
+                # NOTE: Prefer using the service connection context instead of hardcoding subscription id.
                 az account set --subscription <AZURE_SUBSCRIPTION_ID>
+                # Requires RBAC to get AKS credentials; consider using `--admin` only if appropriate.
                 az aks get-credentials --resource-group <RESOURCE_GROUP> --name <AKS_CLUSTER_NAME>
+                # SECURITY: Connection strings and keys should come from secret variables/KeyVault and be passed via `--set-string` (or `--values`), not hardcoded.
+                # NOTE: Variable name mismatch: the Python step sets `maxreplica`/`minreplica` (lowercase), but this command references `$(maxReplica)`/`$(minReplica)`.
+                # NOTE: Likewise, `AzureWebJobsStorageAccount` is set as a variable, but the Helm arg still uses a placeholder.
                 helm upgrade --install $(exp_name)-$(environment) helm/modelservices --namespace $(aks_namespace) --set exp_name=$(exp_name) --set image.repository=${{ parameters.acrRepo }}-$(exp_name) --set image.tag=$(Build.BuildId) --set srceventhub=$(srceventhub) --set sinkeventhub=$(sinkeventhub) --set consumergroup=$(consumergroup) --set storageconnectionstring="DefaultEndpointsProtocol=https;AccountName=<AzureWebJobsStorageAccount>;AccountKey=<AzureWebJobsStorageAccountKey>;EndpointSuffix=core.windows.net" --set inputEHconnectionstring="Endpoint=sb://<eventhub-namespace>/;SharedAccessKeyName=<input-eh-accesspolicy>;SharedAccessKey=<input-eh-key>;EntityPath=<input-entity-path>" --set outputEHconnectionstring="Endpoint=sb://<eventhub-namespace>/;SharedAccessKeyName=<output-eh-accesspolicy>;SharedAccessKey=<output-eh-key>;EntityPath=<output-entity-path>" --set env=$(environment) --set memorylimit=$(memorylimit) --set cpulimit=$(cpulimit) --set maxreplica=$(maxReplica) --set minreplica=$(minReplica)
