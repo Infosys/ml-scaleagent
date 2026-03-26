@@ -9,7 +9,6 @@ A comprehensive ML deployment management system for Kubernetes-based machine lea
 - **Dynamic Scaling** - Auto-scale model deployments based on demand
 - **Deployment Management** - List, update, and delete model deployments via CLI
 - **Database Persistence** - Track deployment specs, compute instances, storage, and event sources
-- **Databricks Integration** - Connect and manage Databricks workspaces for ML workflows
 - **Azure DevOps Integration** - Trigger CI/CD pipelines for model deployments
 - **CLI Interface** - Typer-based command-line tool for operations
 
@@ -18,7 +17,6 @@ A comprehensive ML deployment management system for Kubernetes-based machine lea
 - Python 3.10 or higher
 - Docker and Docker Compose
 - PostgreSQL database
-- Databricks workspace and access token
 - Azure Kubernetes Service (AKS) cluster
 - Azure DevOps account (for pipeline integration)
 - Azure Service Principal credentials
